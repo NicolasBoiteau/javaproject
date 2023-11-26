@@ -1,4 +1,5 @@
-package javaproject;
+
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -105,24 +106,29 @@ public class BurgerOrderApp extends JFrame {
 
     private void commanderBurger() {
         String selectedBurger = (String) burgerComboBox.getSelectedItem();
-
+    
         if (selectedBurger != null) {
             try {
                 // Obtenez le coût du burger depuis la base de données
                 double burgerCost = getBurgerCost(selectedBurger);
-
+    
                 // Demandez à l'utilisateur la quantité
                 String quantityString = JOptionPane.showInputDialog(BurgerOrderApp.this,
                         "Combien de " + selectedBurger + " souhaitez-vous commander?");
                 if (quantityString != null) {
                     try {
                         int quantity = Integer.parseInt(quantityString);
-
+    
                         // Calculez le coût total de la commande
                         double totalCost = burgerCost * quantity;
-
+    
                         // Insérez la commande dans la base de données
                         insertOrderIntoDatabase(selectedBurger, quantity, totalCost);
+    
+                        // Déduisez les ingrédients du stock
+                        StockAdditionGUI stockAdditionGUI = new StockAdditionGUI();
+                        stockAdditionGUI.deductIngredientsFromStock(quantity, selectedBurger);
+    
                         JOptionPane.showMessageDialog(BurgerOrderApp.this, "Commande passée pour " + selectedBurger);
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(BurgerOrderApp.this, "Veuillez entrer une quantité valide.",
@@ -138,7 +144,10 @@ public class BurgerOrderApp extends JFrame {
             JOptionPane.showMessageDialog(BurgerOrderApp.this, "Veuillez sélectionner un burger.", "Erreur",
                     JOptionPane.ERROR_MESSAGE);
         }
+        WaitTimeCalculatorGUI.main(new String[]{});
     }
+    
+    
 
     private double getBurgerCost(String burgerName) throws SQLException {
         try (Connection connexion = DriverManager.getConnection(url, utilisateur, motDePasse)) {

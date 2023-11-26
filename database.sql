@@ -19,9 +19,9 @@ CREATE TABLE Menu (
 -- Insérer des exemples de burgers dans la table Menu avec la décomposition des ingrédients
 INSERT INTO Menu (ItemID,ItemName, Description, Price, Type, Bread, Meat, Cheese, Salad, Tomato, Onions)
 VALUES
-    (1,'Simple Burger', 'Classic single patty burger', 5.99, 'Burger', 1, 1, 1, 1, 1, 1),
-    (2,'Double Burger', 'Hearty double patty burger', 7.99, 'Burger', 1, 1, 1, 1, 1, 1),
-    (3,'Mystery 4T4', 'A mysterious and unique 4-tier burger', 9.99, 'Burger', 1, 1, 1, 1, 1, 1);
+    (1,'Simple Burger', 'Classic single patty burger', 3.50, 'Burger', 2, 1, 1, 1, 1, 1),
+    (2,'Double Burger', 'Hearty double patty burger', 4.90, 'Burger', 3, 2, 2, 2, 2, 2),
+    (3,'Mystery 4T4', 'A mysterious and unique 4-tier burger', 9.99, 'Burger', 5, 4, 4, 4, 4, 4);
 
 -- Table pour stocker les informations sur les clients
 CREATE TABLE Customers (
@@ -54,7 +54,13 @@ CREATE TABLE OrderDetails (
 );
 
 -- Table pour gérer les stocks des matières premières
+
+
 CREATE TABLE Stock (
-    ItemID INT PRIMARY KEY,
-    Quantity INT NOT NULL
+    Bread INT NOT NULL,
+    Meat INT NOT NULL,
+    Cheese INT NOT NULL,
+    Salad INT NOT NULL,
+    Tomato INT NOT NULL,
+    Onions INT NOT NULL
 );

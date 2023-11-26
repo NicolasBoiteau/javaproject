@@ -1,4 +1,4 @@
-package javaproject;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -46,8 +46,6 @@ public class BurgerMenuSwing extends JFrame {
         String utilisateur = "root";
         String motDePasse = "123123";
 
-        // Charger le pilote JDBC
-        Class.forName("org.mariadb.jdbc.Driver");
 
         // Créer les composants Swing
         JLabel labelID = new JLabel("ID du Burger:");
@@ -221,5 +219,6 @@ public class BurgerMenuSwing extends JFrame {
         textFieldSalad.setText("");
         textFieldTomato.setText("");
         textFieldOnions.setText("");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 }
