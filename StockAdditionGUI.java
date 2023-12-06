@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -31,8 +32,20 @@ public class StockAdditionGUI extends JFrame {
         onionsField = new JTextField(10);
 
         JButton addButton = new JButton("Ajouter au Stock");
+        
+        // Ajout d'un ActionListener au bouton
+        addButton.addActionListener(e -> {
+            // Récupérer les valeurs des champs
+            int breadQuantity = Integer.parseInt(breadField.getText());
+            int meatQuantity = Integer.parseInt(meatField.getText());
+            int cheeseQuantity = Integer.parseInt(cheeseField.getText());
+            int saladQuantity = Integer.parseInt(saladField.getText());
+            int tomatoQuantity = Integer.parseInt(tomatoField.getText());
+            int onionsQuantity = Integer.parseInt(onionsField.getText());
 
-    
+            // Appeler la méthode pour ajouter au stock
+            addStockToDatabase(breadQuantity, meatQuantity, cheeseQuantity, saladQuantity, tomatoQuantity, onionsQuantity);
+        });
 
         setLayout(new GridLayout(7, 2));
         add(new JLabel("Quantité de Pain:"));
@@ -97,20 +110,20 @@ public class StockAdditionGUI extends JFrame {
             e.printStackTrace();
         }
     }
-    
-    
-    
-    
+
     public void addStockToDatabase(int bread, int meat, int cheese, int salad, int tomato, int onions) {
         String url = "jdbc:mariadb://localhost:3307/RestaurantDB";
         String utilisateur = "root";
         String motDePasse = "123123";
-    
+
         try {
             Connection connexion = DriverManager.getConnection(url, utilisateur, motDePasse);
-    
+
             String sql = "UPDATE Stock SET Bread = Bread + ?, Meat = Meat + ?, Cheese = Cheese + ?, Salad = Salad + ?, Tomato = Tomato + ?, Onions = Onions + ?";
-    
+            System.out.println("Bread: " + bread);
+            System.out.println("Meat: " + meat);
+
+
             try (PreparedStatement statement = connexion.prepareStatement(sql)) {
                 statement.setInt(1, bread);
                 statement.setInt(2, meat);
@@ -118,17 +131,34 @@ public class StockAdditionGUI extends JFrame {
                 statement.setInt(4, salad);
                 statement.setInt(5, tomato);
                 statement.setInt(6, onions);
-    
-                statement.executeUpdate();
+
+                int rowsAffected = statement.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    // Opération réussie, réinitialiser les champs
+                    breadField.setText("");
+                    meatField.setText("");
+                    cheeseField.setText("");
+                    saladField.setText("");
+                    tomatoField.setText("");
+                    onionsField.setText("");
+
+                    // Afficher une notification
+                    JOptionPane.showMessageDialog(this, "Stock ajouté avec succès", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    // Aucune ligne mise à jour, peut-être que la condition WHERE n'a pas été satisfaite
+                    JOptionPane.showMessageDialog(this, "Aucun stock ajouté. Vérifiez les valeurs ou la condition de mise à jour.", "Avertissement", JOptionPane.WARNING_MESSAGE);
+                }
             }
-    
+
             connexion.close();
         } catch (SQLException e) {
+            // Gérer les erreurs SQL
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Une erreur s'est produite lors de l'ajout au stock. Vérifiez la console pour plus d'informations.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new StockAdditionGUI());
     }
