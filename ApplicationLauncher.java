@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 public class ApplicationLauncher extends JFrame {
     
 
+
     public ApplicationLauncher() {
         super("Launcher");
 
